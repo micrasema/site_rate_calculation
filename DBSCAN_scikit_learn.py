@@ -1,6 +1,4 @@
-#import sys module to take command line arguments
 import sys  
-#import time to keep track of time analysis takes
 import time
 
 import numpy as np 
@@ -21,12 +19,12 @@ def dbscan(inFile, epsilon, min_n):
 	for i in rate_list_lines:
 		float_rate = float(i.strip("\n"))
 		rate_list.append([float_rate])
-	#create one dimensional array from site rate list
+	# Create one dimensional array from site rate list
 	rate_array = np.array(rate_list, ndmin = 2)
 	# Create instance of DBSCAN object from scikit_learn and fit DBSCAN on 
     # array
 	DBSCAN_result = DBSCAN(epsilon, min_n, 'Euclidean').fit(rate_array)
-	#retrieve cluster information for each site
+	# Retrieve cluster information for each site
 	site_rate_categories = DBSCAN_result.labels_
 	# print site_rate_categories
 	# Add cluster information for each site to dictionary along with site 
@@ -65,16 +63,16 @@ def get_rate_dictionary(inFile):
 def cluster_histogram(inFile, epsilon, min_n, num_bins):
     # Make call to kmeans function
     char_dict = dbscan(inFile, epsilon, min_n)
-    # Create new dictionary with categories as keys and lists of sites as 
-    # values
+    # Create new dictionary with categories as keys and lists of sites 
+    # as values
     cluster_dict = defaultdict(list)
     for k, v in char_dict.iteritems():
         cluster_dict[v].append(k)
     inFile.seek(0)
     # Retrieve dictionary of rates
     dictionary_of_rates = get_rate_dictionary(inFile)
-    # Merge dictionaries so site rate values are stored as lists with their 
-    # corresponding cluster number
+    # Merge dictionaries so site rate values are stored as lists with 
+    # their corresponding cluster number
     rate_dict = ({k: [dictionary_of_rates[i] for i in v] for k, v 
         in cluster_dict.items()}
     rate_list = []
@@ -90,7 +88,8 @@ def cluster_histogram(inFile, epsilon, min_n, num_bins):
     pl.show()
 
 if __name__ == '__main__':
-	# Open file with site rates, each rate must be separated by newline character "\n"
+	# Open file with site rates, each rate must be separated by newline
+    # character "\n"
 	file1 = sys.argv[1]
 	# Open file for reading and save in variable inFile to feed to function
 	inFile = open(file1)
